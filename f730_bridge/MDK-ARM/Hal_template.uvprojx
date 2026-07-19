@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F730xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F7xx_HAL_Driver/Inc;../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F7xx/Include;../Drivers/CMSIS/Include;../Core/Inc;..\BSP\Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F7xx_HAL_Driver/Inc;../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F7xx/Include;../Drivers/CMSIS/Include;../BSP/Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -392,17 +392,17 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Application/User</GroupName>
+          <GroupName>Application/User/Core</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/main.c</FilePath>
+              <FilePath>../Core/Src/main.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/gpio.c</FilePath>
+              <FilePath>../Core/Src/gpio.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -458,12 +458,12 @@
             <File>
               <FileName>stm32f7xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/stm32f7xx_it.c</FilePath>
+              <FilePath>../Core/Src/stm32f7xx_it.c</FilePath>
             </File>
             <File>
               <FileName>stm32f7xx_hal_msp.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/stm32f7xx_hal_msp.c</FilePath>
+              <FilePath>../Core/Src/stm32f7xx_hal_msp.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -473,7 +473,32 @@
             <File>
               <FileName>system_stm32f7xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Src/system_stm32f7xx.c</FilePath>
+              <FilePath>../Core/Src/system_stm32f7xx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/BSP</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../BSP/Src/bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../BSP/Src/bsp_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../BSP/Src/bsp_debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../BSP/Src/bsp_time.c</FilePath>
             </File>
           </Files>
         </Group>
