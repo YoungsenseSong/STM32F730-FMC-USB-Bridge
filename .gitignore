@@ -1,0 +1,28 @@
+# Keil and compiler outputs
+f730_bridge/MDK-ARM/Hal_template/
+*.uvguix.*
+*.o
+*.d
+*.crf
+*.lnp
+*.map
+*.axf
+*.hex
+*.bin
+*.build_log.htm
+
+# IAR outputs
+f730_bridge/EWARM/Debug/
+f730_bridge/EWARM/Release/
+
+# Local and generated files
+.venv/
+artifacts/
+logs/
+tmp/
+__pycache__/
+*.pyc
+
+# Hardware vendor/source documents are indexed separately before publication
+*.docx
+f730_bridge/硬件资料/
