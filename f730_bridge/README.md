@@ -18,10 +18,10 @@
 
 ## 工程入口
 
-- CubeMX：`f730_bridge/Hal_template.ioc`
-- Keil：`f730_bridge/MDK-ARM/Hal_template.uvprojx`
-- BSP 接口：`f730_bridge/BSP/Inc`
-- BSP 实现：`f730_bridge/BSP/Src`
+- CubeMX：`Hal_template.ioc`
+- Keil：`MDK-ARM/Hal_template.uvprojx`
+- BSP 接口：`BSP/Inc`
+- BSP 实现：`BSP/Src`
 - 阶段 4 记录：`PHASE4_PROGRESS.md`
 - 后续需求：`docs/f730_bridge_ROADMAP.md`
 
@@ -39,7 +39,7 @@ server.stm32_build(clean=True, chip="STM32F730V8T6")
 
 ## 发布边界
 
-仓库不包含共享 MCP、H723 参考工程、MCP artifacts、Python 虚拟环境、第三方硬件资料或未经许可的设计文档。`f730_bridge/硬件资料` 与根目录 DOCX 仅作为本地设计依据，不随源码发布。
+仓库不包含共享 MCP、H723 参考工程、MCP artifacts、Python 虚拟环境、第三方硬件资料或未经许可的设计文档。`硬件资料` 与工程目录中的 DOCX 仅作为本地设计依据，不随源码发布。
 
 ## 硬件验证状态
 
