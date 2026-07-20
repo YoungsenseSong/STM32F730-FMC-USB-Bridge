@@ -107,7 +107,10 @@ int main(void)
   MX_TIM6_Init();
   MX_USB_OTG_FS_PCD_Init();
   /* USER CODE BEGIN 2 */
-  BSP_Init();
+  if (BSP_Init() != BSP_STATUS_OK)
+  {
+    Error_Handler();
+  }
 
   /* USER CODE END 2 */
 

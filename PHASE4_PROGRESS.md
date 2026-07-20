@@ -1,10 +1,21 @@
-# 阶段 4 暂停点
+# 阶段 4 进度记录
 
 更新时间：2026-07-20（Asia/Shanghai）
 
-状态：按用户要求暂停。尚未修改阶段 4 固件源码、CubeMX 配置或 Keil 工程，尚未执行阶段 4 编译。
+状态：已从暂停点恢复，并完成有文档依据的阶段 4 BSP 骨架、Keil 全量编译和 MCP 审计。完整 USB Vendor Bulk、FPGA ACK/CRC/RESET 和板上联调仍受缺失定义约束。
 
-## 已完成
+## 恢复后的完成结果
+
+- 新增 `bsp_fmc`、`bsp_i2c`、`bsp_usb` 和 `bsp_fpga_ctrl`，并加入 Keil `Drivers/BSP` 分组。
+- `bsp_fmc` 实现 16 位对齐访问、已知寄存器偏移、只读数据窗口和 64 字节块头解析；未实现未知 ACK/控制位/CRC 语义。
+- PC6 保持 CubeMX 安全输入并按高电平有效进行轮询。尝试通过 MCP 改为 EXTI 时，CubeMX 预检两次停在第三方组件模型扫描并超时，因此没有绕过 MCP 或直接修改 `.ioc`。
+- PC7 保持输入；复位 API 明确返回 `BSP_STATUS_UNSUPPORTED`。
+- I2C 仅提供通用 7 位地址 HAL 封装；USB 仅报告 PCD 能力，Vendor Bulk 明确不可用。
+- TIM6 作为 1 MHz 16 位计数器启动；主循环刷新 IWDG。
+- 显式 `STM32F730V8T6` MCP 全量构建：0 Error、0 Warning；Code=18388、RO=528、RW=12、ZI=5628。
+- CubeMX 配置审计 24/24、目标身份审计、项目审计和 HEX 地址范围校验均通过；未进行硬件下载。
+
+## 暂停时已完成
 
 - 已读取并逐页检查 `zynq7020.docx` 全部 9 页。
 - 文档标准渲染器因本机缺少隔离运行时依赖和 LibreOffice 无法使用；改用 Microsoft Word 只读导出 PDF，再生成 9 张页面图检查。
@@ -55,10 +66,9 @@
 6. 在主循环中刷新 IWDG，并启动/使用 TIM6 1 MHz 计数器。
 7. 更新 Keil BSP 分组，通过显式 F730 MCP 目标执行全量编译与审计。
 
-## 当前仓库基线
+## 暂停时仓库基线
 
 - F730 分支：`codex/f730-bsp-v1`
 - 最新 F730 提交：`426bd86 Configure F730 peripherals through CubeMX MCP`
 - MCP 分支：`codex/f730-target-support`
 - 最新 MCP 提交：`3c7b6a6 Add staged F730 CubeMX configuration workflow`
-
