@@ -21,6 +21,7 @@
 #include "i2c.h"
 #include "iwdg.h"
 #include "tim.h"
+#include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
 #include "fmc.h"
@@ -105,6 +106,7 @@ int main(void)
   MX_I2C1_Init();
   MX_IWDG_Init();
   MX_TIM6_Init();
+  MX_USART1_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   /* USER CODE BEGIN 2 */
   if (BSP_Init() != BSP_STATUS_OK)

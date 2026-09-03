@@ -16,6 +16,7 @@
 /EWARM/Release/
 
 # Local and generated files
+/build/
 .venv/
 artifacts/
 logs/
