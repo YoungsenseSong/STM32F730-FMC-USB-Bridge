@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "name": "F730-FPGA-Integration",
+      "path": "."
+    },
+    {
+      "name": "nRF54L15",
+      "path": "../nrf54l15-connectkit"
+    }
+  ],
+  "settings": {
+    "search.exclude": {
+      "**/.Xil/**": true,
+      "**/*.cache/**": true,
+      "**/*.runs/**": true,
+      "**/build*/**": true,
+      "**/MDK-ARM/Hal_template/**": true
+    },
+    "files.exclude": {
+      "**/.Xil": true,
+      "**/__pycache__": true
+    }
+  }
+}

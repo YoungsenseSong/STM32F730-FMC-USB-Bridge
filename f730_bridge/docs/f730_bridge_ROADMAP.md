@@ -1,103 +1,64 @@
 # F730 Bridge 后续完善需求
 
-本文记录第一版之后继续完整桥接所需的外部定义、实现任务和验收边界。未获得下列输入前，不在固件中猜测协议值、硬件极性或实验结果。
+更新时间：2026-09-03
 
-## 第一版已完成
+## 已完成的离线数据面
 
-- STM32F730V8T6 `Core`/`BSP` 工程结构和 Keil 分组。
-- USB OTG FS Device Only、FMC Bank1 16 位复用总线、I2C1、IWDG、TIM6 和安全 GPIO 配置。
-- FMC 16 位底层访问、文档给出的寄存器偏移、数据窗口读取及 64 字节 `FPB1` 块头解析。
-- 通用 7 位 I2C 主机传输封装。
-- FPGA IRQ 高电平轮询、事件统计和 RESET unsupported 能力报告。
-- USB PCD 状态和 FS 64 字节最大包能力报告；未伪造 USB 类或枚举。
-- 显式 F730 MCP 构建、CubeMX 24/24 审计、HEX 地址范围校验及 MCP 回归。
+- 248 B record、64 B block、CRC16/CRC32、block ACK 和 `UBR1` USB 帧已冻结在根仓 `bridge_contract_v0.md`。
+- 当前构建采用 CDC ACM FS：data OUT `0x01`、data IN `0x81`、command IN `0x82`、64 B max packet；默认运行可靠回环诊断。
+- FMC-to-USB 状态机已实现：稳定快照、分段读、完整校验、USB 完成后 ACK、重复块和错误保持所有权。
+- FMC 异步低有效 NWAIT 已在源码和 `.ioc` 中一致启用。
+- USART1 调试输出已配置为 PA9/PA10、115200 8-N-1，并提供 `printf` 重定向及
+  `ping`/`pong` 双向检查。
+- Keil 与 GNU Arm 双工具链 clean build、共享 golden tests、RTL testbench 和 Vivado `check_syntax` 已通过。
 
-## P0：USB Vendor Bulk
+## 仍需输入，禁止猜测
 
-需要提供或确定：
+### USB 产品身份与 CDC 过渡方案
 
-- USB VID/PID 及其授权来源。
-- Manufacturer、Product、Serial Number 字符串策略。
-- Configuration、Interface 和 Endpoint 描述符。
-- Bulk IN/OUT 端点号、缓冲策略及超时规则。
-- Vendor Bulk 类实现方案，或允许采用的 USB Device Middleware 版本。
-- 控制端点上的厂商请求、协议版本查询和错误恢复行为。
+当前学生科研联调镜像明确使用 `work1` 的 ST 示例 `0483:5744`、
+`STMicroelectronics` 和 `STM32 Virtual ComPort`，仅用于受控实验室 CDC 功能验证。
+它不是本项目获得的身份授权。对外分发前仍需取得授权来源明确的 VID/PID、Manufacturer
+和 Product，再修改 `USB_DEVICE/App/bridge_usb_identity.h` 并重新执行双工具链构建。
 
-验收目标：
+量产优先申请本公司的 USB-IF VID，再由 VID 所有者内部唯一分配 PID；也可使用持有者
+书面授权的 VID/PID 子分配。不得使用 ST 的 `0483:5744`、随机 VID/PID 或未经授权的
+第三方 VID。Manufacturer 使用负责该设备的合法公司/品牌名，Product 使用稳定且可区分
+型号的产品名；每台设备还应生成唯一序列号字符串。
 
-- USB FS Device Only 稳定枚举，MaxPacket 为 64 字节。
-- Bulk OUT 到 Bulk IN 回环通过。
-- 断开重连、主机取消传输和总线复位可恢复。
+当前 Windows 主机按 CDC ACM 绑定虚拟 COM 口，不再人工绑定 WinUSB。若后续重新选择
+Vendor Bulk，才需要恢复相应类、合法身份和 WinUSB/libusb 绑定方案。
 
-## P0：FPGA 寄存器和 FMC 握手
+### FPGA 与板级电气
 
-需要 FPGA 侧提供：
+- 最终 `FPGA_ID` 和 BUILD 编码；
+- 原理图审核后的 PL clock、全部 PACKAGE_PIN、IOSTANDARD 和 Bank 电压；
+- PC7 是否连接 FPGA RESET、有效电平和最小保持/启动时间；
+- NWAIT 最大拉低时间、FMC ADDSET/DATAST 和采样裕量；
+- CH1..CH3 的 nRF-ZYNQ 引脚、电气与四路同时运行策略；CH0 已冻结为 mode 0、
+  1 MHz、两个 CS 事务、DRDY 高有效和 SYNC 上升沿，但当前双 5 ms 保护间隔尚不满足
+  持续吞吐；
+- nRF RESET_N 的最终驱动语义；CH0 首轮明确不接。
 
-- `GLOBAL_CTRL`、`GLOBAL_STATUS`、`IRQ_STATUS`、`IRQ_MASK`、`SYNC_CTRL`、`SYNC_STATUS`、`BLOCK_STATUS` 的完整位定义。
-- `BLOCK_ACK` 写入值、块序号或缓冲区编号编码，以及重复 ACK 的处理方式。
-- `FPGA_ID`、`PROTO_VERSION` 和兼容性判断常量。
-- READY、MCU_READING、ACK、FREE 状态转换的原子性与超时规则。
-- CMD/RSP FIFO 的字宽、深度、满空条件和命令帧格式。
+CH0 专用测试 bitstream 已完成综合、实现并建立实板功能闭环；这不是四路或产品
+bitstream。其余内容未提供前，不得从 CH0 结果外推四路/FMC/量产结论。
 
-验收目标：
+### I2C 固定 ID
 
-- 固定寄存器读写、W1C IRQ 清除和 A/B 缓冲所有权转换通过。
-- 非法状态、重复块、超时和 FPGA 复位后能够恢复。
+仍需 7-bit 地址、寄存器地址宽度、固定 ID、端序、超时和重试规则。现有 BSP 仅提供
+通用 HAL 封装，不写死未知设备。
 
-## P0：CRC32 定义
+## 板级 Gate
 
-需要明确：
+1. F730 旧安全 smoke：用户报告已通过。
+2. 烧录 2026-08-18 CDC FS 镜像，验证 `0483:5744` 虚拟 COM、字节回环、PA5 包活动脉冲、拔插/复位和持续传输。
+3. USART1 PA9/PA10 调试输出可并行验收，用于记录 CDC 运行状态；不要在高吞吐阶段持续打印。
+4. 有审核 XDC/bitstream 后，先做 FMC 固定字、地址/数据/NWAIT，再做 A/B bank 和 ACK。
+5. 接单路 nRF，验证真实 SPIS/DRDY/SYNC；最后扩至四路和持续吞吐/故障注入。
 
-- 多项式。
-- 初始值。
-- 输入/输出反射方式。
-- 最终异或值。
-- CRC 覆盖范围以及块头字段是否参与计算。
-- 至少一组 FPGA 生成的输入与期望 CRC 测试向量。
+截至 2026-09-03，第 5 项的 CH0 基本功能已经达到 `records=1957`、`pop_total=1956`、
+`crc_errors=0`；仍有少量 invalid/short/submit 错误和大量 nRF record queue overflow，
+所以持续吞吐和长测尚未通过。F730 工作不依赖先完成四路，但 FMC 联调必须使用带
+block/BRAM/FMC 的正式顶层，不能把 `ch0_test_top` 直接当作 FMC 镜像。
 
-验收目标：STM32 与 FPGA 对同一测试向量和实际数据块得到一致结果，错误块不会发送至 USB。
-
-## P0：FPGA RESET 和 IRQ
-
-需要明确：
-
-- PC7 是否确实连接 FPGA RESET。
-- RESET 有效电平、最小保持时间和释放后的就绪时间。
-- PC6 IRQ 的板级上拉/下拉、电气类型和去抖要求。
-- 是否允许把 PC6 从轮询输入改为 EXTI，以及中断优先级约束。
-
-验收目标：可控复位不会产生总线争用；IRQ 在持续高电平和并发事件情况下不丢失。
-
-## P1：I2C 固定 ID 协议
-
-需要明确：
-
-- 7 位从机地址。
-- 器件或 FPGA I2C 从机类型。
-- ID 寄存器地址、宽度、字节序和期望值。
-- 寄存器地址宽度、重复起始要求、超时和重试策略。
-
-验收目标：上电读取固定 ID，能够区分设备缺失、总线占用、NACK 和 ID 不匹配。
-
-## P1：完整桥接和恢复
-
-在以上协议冻结后实现：
-
-1. USB Vendor Bulk 回环。
-2. FMC 固定值和寄存器测试。
-3. FMC 块头、payload 和 CRC 校验。
-4. A/B 双缓冲及 ACK。
-5. FMC-to-USB 持续传输与反压。
-6. USB、FMC、FPGA 与 I2C 异常恢复。
-7. 诊断计数器、协议版本和错误状态查询。
-
-验收需要记录板卡版本、FPGA bitstream 版本、固件提交、测试命令、吞吐量、丢块数、CRC 错误数和恢复结果；没有真实硬件日志时不得标记完成。
-
-## 当前阻塞输入清单
-
-- USB VID/PID、描述符、端点规划和 Vendor Bulk 类实现。
-- FPGA 控制/状态位定义、ACK 编码、ID 常量和完整握手协议。
-- CRC32 全部参数及测试向量。
-- FPGA RESET 极性和板级连接定义。
-- I2C 地址、固定 ID 寄存器和访问协议。
-- 可用于 DAPLink、USB、FMC 和 FPGA 联调的硬件环境。
+具体命令、预期和证据字段见 `HARDWARE_BRINGUP.md`。任何一级只证明该级，不向后外推。
