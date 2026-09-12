@@ -200,8 +200,18 @@ bool BSP_FMC_BlockHeaderIsSane(const BSP_FPGA_BlockHeader *header)
 {
   return (header != NULL) &&
          (header->magic == BSP_FPGA_BLOCK_MAGIC) &&
+         (header->version == BSP_FPGA_PROTOCOL_VERSION) &&
          (header->header_length == BSP_FPGA_BLOCK_HEADER_BYTES) &&
+         (header->payload_length != 0U) &&
          (header->payload_length <= BSP_FPGA_MAX_PAYLOAD_BYTES) &&
+         ((header->payload_length % BSP_FPGA_RECORD_BYTES) == 0U) &&
          ((header->channel_mask & ~0x0FUL) == 0UL) &&
+         ((header->flags & 0x0FUL) == 0UL) &&
          (header->last_fpga_tick >= header->first_fpga_tick);
+}
+
+BSP_Status BSP_FMC_AcknowledgeBlock(uint32_t block_sequence)
+{
+  return BSP_FMC_WriteCommand16(BSP_FMC_REG_BLOCK_ACK,
+                                (uint16_t)(block_sequence & 0xFFFFUL));
 }

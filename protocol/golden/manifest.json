@@ -1,0 +1,49 @@
+{
+  "block": {
+    "bytes": 560,
+    "payload_bytes": 496,
+    "sequence": 2309737967
+  },
+  "contract_version": 1,
+  "files": {
+    "fpga_block_two_records.bin": {
+      "bytes": 560,
+      "sha256": "75fe598ef2c176a2fb54ff6764adc80764c25abfc44eea40bec29bc45c1277f9"
+    },
+    "nrf_record_header_crc_bad.bin": {
+      "bytes": 248,
+      "sha256": "510a0415b2942f6ebc2697ddebe8c88273b8c49df2ad820e2149e8954890936b"
+    },
+    "nrf_record_payload_crc_bad.bin": {
+      "bytes": 248,
+      "sha256": "4e30a7ffc9e328a92a7a5a925b6363a6e011a25c746cdfeff029d1c977edc222"
+    },
+    "nrf_record_valid.bin": {
+      "bytes": 248,
+      "sha256": "2e0faa46f054596614bdd40805874d3605d74a06a78bc3817ce6e502d3be09d8"
+    },
+    "usb_data_frame.bin": {
+      "bytes": 584,
+      "sha256": "3e972f02031654a5d1de9471d44e50bd26e6fb60238b45a746297c6709a534c0"
+    },
+    "usb_stream_fragments.json": {
+      "bytes": 1439,
+      "sha256": "1fb1f4aacf00d865468d1533fab3b2c4fe12388055793f1f6b0358ac49bdb9e0"
+    },
+    "usb_stream_two_frames.bin": {
+      "bytes": 612,
+      "sha256": "fa942e193f54f811d76ec59958770e707a9c91123f8b4a39b9d6c82964992225"
+    }
+  },
+  "record": {
+    "bytes": 248,
+    "header_crc16": 19423,
+    "payload_crc32": 1390064941,
+    "transport_seq": 4294967294
+  },
+  "usb": {
+    "data_frame_bytes": 584,
+    "fragment_count": 8,
+    "stream_frame_count": 2
+  }
+}

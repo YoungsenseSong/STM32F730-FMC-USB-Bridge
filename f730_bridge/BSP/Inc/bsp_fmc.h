@@ -30,9 +30,14 @@ extern "C" {
 #define BSP_FMC_COMMAND_FIFO_BASE        0x0400UL
 #define BSP_FMC_DATA_WINDOW_BASE         0x1000UL
 
+#define BSP_FMC_BLOCK_STATUS_READY       0x0001U
+#define BSP_FMC_BLOCK_STATUS_BANK        0x0002U
+
 #define BSP_FPGA_BLOCK_MAGIC             0x31425046UL /* bytes: F P B 1 */
+#define BSP_FPGA_PROTOCOL_VERSION        1U
 #define BSP_FPGA_BLOCK_HEADER_BYTES      64UL
-#define BSP_FPGA_MAX_PAYLOAD_BYTES       (32UL * 1024UL)
+#define BSP_FPGA_RECORD_BYTES            248UL
+#define BSP_FPGA_MAX_PAYLOAD_BYTES       (132UL * BSP_FPGA_RECORD_BYTES)
 #define BSP_FPGA_MAX_BLOCK_BYTES         (BSP_FPGA_BLOCK_HEADER_BYTES + BSP_FPGA_MAX_PAYLOAD_BYTES)
 
 typedef struct
@@ -72,6 +77,7 @@ BSP_Status BSP_FMC_ReadBlockSnapshot(BSP_FMC_BlockSnapshot *snapshot);
 BSP_Status BSP_FMC_ReadDataWindow(uint32_t window_byte_offset, uint8_t *data, size_t length);
 BSP_Status BSP_FMC_ReadBlockHeader(BSP_FPGA_BlockHeader *header);
 bool BSP_FMC_BlockHeaderIsSane(const BSP_FPGA_BlockHeader *header);
+BSP_Status BSP_FMC_AcknowledgeBlock(uint32_t block_sequence);
 
 #ifdef __cplusplus
 }

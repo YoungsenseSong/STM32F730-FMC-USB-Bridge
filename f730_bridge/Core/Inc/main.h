@@ -57,8 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_D2_Pin GPIO_PIN_13
-#define LED_D2_GPIO_Port GPIOC
+#define STATUS_LED_Pin GPIO_PIN_5
+#define STATUS_LED_GPIO_Port GPIOA
 #define FPGA_IRQ_RESERVED_Pin GPIO_PIN_6
 #define FPGA_IRQ_RESERVED_GPIO_Port GPIOC
 #define FPGA_RESET_RESERVED_Pin GPIO_PIN_7

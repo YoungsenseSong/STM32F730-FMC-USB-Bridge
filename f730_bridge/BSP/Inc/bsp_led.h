@@ -7,7 +7,7 @@ extern "C" {
 
 #include "bsp.h"
 
-/* The board D2 LED is connected to PC13 and is active low. */
+/* The actual target board's status LED is connected to PA5. */
 void BSP_LED_Init(void);
 void BSP_LED_On(void);
 void BSP_LED_Off(void);

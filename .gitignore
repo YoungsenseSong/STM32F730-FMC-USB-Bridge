@@ -1,0 +1,9 @@
+# Top-level transient files
+/.Xil/
+/tmp/
+
+# The nRF application remains an independent nested Git repository after migration.
+/nrf54l15-connectkit/
+
+# Large/raw experimental captures are kept outside Git; retain manifests and READMEs.
+/paper/evidence/raw/
