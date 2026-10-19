@@ -36,7 +36,7 @@ WCH 国产替代桥接工程位于 `projects/wch_fsmc_bridge/firmware/wch_f730_b
 2. `bridge_contract_v0.md`：三端唯一共享的字节、CRC、所有权和错误语义；
 3. `docs/WORKSPACE_MIGRATION.md`：Git 边界、迁移方法和不可复制的缓存；
 4. 当前任务所属工程的入口文档：
-   - F730：`projects/f730_fmc_bridge/firmware/projects/f730_fmc_bridge/firmware/f730_bridge/README.md`；
+   - F730：`projects/f730_fmc_bridge/firmware/f730_bridge/README.md`；
    - FPGA：`zynq7020/zynq7020_bridge/docs/FPGA_README.md`；
    - nRF：外部仓库自己的 `handoff.md`；
 5. 论文工作：已迁至同级独立写作目录 `../paper/`，使用根目录
@@ -74,5 +74,6 @@ FPGA 计数仍需重新导出。
 当前可直接打开 `multisensor-research.code-workspace`。迁移到新目录时，只需完整复制
 本目录，并把 nRF 自定义仓库放入 `nrf54l15-connectkit/`，再把工作区文件中的 nRF
 路径改成相对路径。完整步骤见 `docs/WORKSPACE_MIGRATION.md`。
+
 
 
