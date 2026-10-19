@@ -44,10 +44,11 @@
 可重复执行：
 
 ```powershell
+# 以下命令从仓库根目录 F730+FPGA 执行
 python -B -m unittest -v protocol.test_contract
-python -B f730_bridge\tools\cdc_echo_test.py --self-test
-cmake --preset Release -S f730_bridge
-cmake --build f730_bridge\build\Release --clean-first
+python -B projects\f730_fmc_bridge\firmware\f730_bridge\tools\cdc_echo_test.py --self-test
+cmake --preset Release -S projects\f730_fmc_bridge\firmware\f730_bridge
+cmake --build projects\f730_fmc_bridge\firmware\f730_bridge\build\Release --clean-first
 ```
 
 工具链不在 PATH 时，按 `cmake/gcc-arm-none-eabi.cmake` 的 `TOOLCHAIN_ROOT` 和 `TOOLCHAIN_PREFIX` 显式指定。构建输出均由 `.gitignore` 排除。
@@ -71,3 +72,4 @@ NWAIT 和 block ACK 测试直接做完整流。
 `protocol/`、`bridge_contract_v0.md` 和 `handoff.md`，不能只复制本目录后声称保留了
 历史与共享协议。统一入口和迁移步骤见 `../README.md` 与
 `../docs/WORKSPACE_MIGRATION.md`。
+
