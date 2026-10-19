@@ -1,0 +1,12 @@
+{
+  "cmake.useCMakePresets": "always",
+  "cmake.configureOnOpen": false,
+  "cmake.buildDirectory": "${sourceDirectory}/build/${presetName}",
+  "cmake.defaultConfigurePreset": "fmc-bridge-vscode",
+  "cmake.defaultBuildPreset": "fmc-bridge-vscode",
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "files.associations": {
+    "*.h": "c",
+    "*.c": "c"
+  }
+}

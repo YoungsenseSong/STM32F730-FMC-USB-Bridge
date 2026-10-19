@@ -1,0 +1,10 @@
+/build/
+/build_*/
+/host_build/
+.Xil/
+*.jou
+*.log
+*.pyc
+__pycache__/
+CMakeUserPresets.json
+evidence/

@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "WCH: build FSMC bridge",
+      "type": "cmake",
+      "command": "build",
+      "preset": "fmc-bridge-vscode",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "WCH: hash bridge HEX",
+      "type": "shell",
+      "command": "Get-FileHash '${workspaceFolder}/release/WchF730Bridge.hex' -Algorithm SHA256",
+      "problemMatcher": []
+    }
+  ]
+}

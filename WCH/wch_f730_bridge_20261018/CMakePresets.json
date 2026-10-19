@@ -1,0 +1,67 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "release",
+      "displayName": "CH32V307VCT6 internal-source USB demo",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/release",
+      "toolchainFile": "${sourceDir}/cmake/wch-riscv.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "WCH_ENABLE_EXTBUS": "OFF",
+        "WCH_SIM_SOURCE": "ON"
+      }
+    },
+    {
+      "name": "extbus-on",
+      "displayName": "CH32V307VCT6 migration demo with FSMC access",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/build/extbus-on",
+      "cacheVariables": {
+        "WCH_ENABLE_EXTBUS": "ON",
+        "WCH_SIM_SOURCE": "OFF"
+      }
+    },
+    {
+      "name": "echo",
+      "displayName": "CH32V307VCT6 USB CDC echo diagnostic",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/build/echo",
+      "cacheVariables": {
+        "WCH_ENABLE_EXTBUS": "OFF",
+        "WCH_SIM_SOURCE": "OFF"
+      }
+    },
+    {
+      "name": "fmc-bridge",
+      "displayName": "CH32V307VCT6 FPGA FSMC to USBFS bridge",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/build/fmc-bridge",
+      "cacheVariables": {
+        "WCH_ENABLE_EXTBUS": "ON",
+        "WCH_SIM_SOURCE": "OFF",
+        "WCH_FMC_BRIDGE": "ON",
+        "WCH_USB_TRACE": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "extbus-on",
+      "configurePreset": "extbus-on"
+    },
+    {
+      "name": "echo",
+      "configurePreset": "echo"
+    },
+    {
+      "name": "fmc-bridge",
+      "configurePreset": "fmc-bridge"
+    }
+  ]
+}
