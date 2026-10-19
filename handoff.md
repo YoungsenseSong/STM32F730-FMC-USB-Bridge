@@ -25,7 +25,7 @@
 
 设计依据：
 
-- F730：[`f730_bridge/f730_bridge.docx`](f730_bridge/f730_bridge.docx)，重点是第 5～10 页的软件状态机、USB Vendor Bulk、FMC/NWAIT、Cache 与验收流程，以及第 13～14 页的引脚冻结和首次上电顺序。
+- F730：[`projects/f730_fmc_bridge/firmware/f730_bridge/f730_bridge.docx`](projects/f730_fmc_bridge/firmware/f730_bridge/f730_bridge.docx)，重点是第 5～10 页的软件状态机、USB Vendor Bulk、FMC/NWAIT、Cache 与验收流程，以及第 13～14 页的引脚冻结和首次上电顺序。
 - ZYNQ：[`zynq7020/zynq7020.docx`](zynq7020/zynq7020.docx)，重点是第 2～8 页的纯 PL 数据通路、四路 SPI、SYNC、BRAM 所有权、FMC/CSR 和验证矩阵。
 - nRF：远端 `README.md`、`applications/rf_link_FUTURE_INTEGRATION.md`、`applications/rf_link_INTEGRATION_REPORT.md` 和 `applications/rf_link_ROADMAP.md`。
 
@@ -335,7 +335,7 @@ IIM-42352 -> nRF TX -> 2.4 GHz -> nRF RX
 4. ZYNQ parser 改为固定 248 B 且严格检查 header/payload CRC；block target/max 为 66/132 条完整 record；A/B bank 只接受已 claim 且序号匹配的 ACK。
 5. F730 实现 Vendor Bulk、OUT 背压、IN 发送所有权、USB 字节流解析、FMC 稳定快照、分段读、block/record/CRC 校验、USB 完成后 ACK、重复块和故障保持所有权。
 6. F730 `.ioc` 与源码都启用低有效异步 NWAIT；最终时序只留给逻辑分析仪验证。
-7. 新增 `f730_bridge/tools/vendor_bulk_host.py`，可离线消费共享 golden，也可在 WinUSB/libusb 下检查枚举、未知命令 RSP、USB/block/record CRC 和 sequence。
+7. 新增 `projects/f730_fmc_bridge/firmware/f730_bridge/tools/vendor_bulk_host.py`，可离线消费共享 golden，也可在 WinUSB/libusb 下检查枚举、未知命令 RSP、USB/block/record CRC 和 sequence。
 
 ### 9.3 离线验证证据
 
@@ -344,7 +344,7 @@ IIM-42352 -> nRF TX -> 2.4 GHz -> nRF RX
 | `work1` clean GCC Debug | 成功；Flash 37,888 B（57.81%），RAM 17,392 B（6.63%） | `20260815/work1-debug-zephyr-final/{configure.log,build.log,size.log}` |
 | `test_CDC.py` | `SELF_TEST_OK`，AST OK | 2026-08-16 本机复核 |
 | 共享协议 Python | 9/9 | `python -B -m unittest -v protocol.test_contract` |
-| Vendor host codec | `VENDOR_HOST_SELF_TEST_OK frames=2 block_records=2` | `python -B f730_bridge/tools/vendor_bulk_host.py --self-test` |
+| Vendor host codec | `VENDOR_HOST_SELF_TEST_OK frames=2 block_records=2` | `python -B projects/f730_fmc_bridge/firmware/f730_bridge/tools/vendor_bulk_host.py --self-test` |
 | F730 C codec | ArmClang 6.23 `-Wall -Wextra -Werror` 两个 object 编译成功 | `20260816/f730-protocol-c-final/compile.log`；当前无本机 native C runner，因此这是编译证据，不冒充运行证据 |
 | ZYNQ record parser TB | 合法 record 通过，坏 header CRC、坏 payload CRC、坏长度拒绝 | `20260816/tb_spi_record_parser_final_run.log` |
 | ZYNQ block builder TB | 560 B shared golden 逐字节一致；两个 mid-record flush 边界通过 | `20260816/tb_block_builder_final_run.log` |
@@ -372,7 +372,7 @@ IIM-42352 -> nRF TX -> 2.4 GHz -> nRF RX
 
 ### 9.5 现在需要开发板的动作
 
-先只执行 `f730_bridge/docs/HARDWARE_BRINGUP.md` Gate A：烧录 Keil HEX
+先只执行 `projects/f730_fmc_bridge/firmware/f730_bridge/docs/HARDWARE_BRINGUP.md` Gate A：烧录 Keil HEX
 `6023d803...2f974`，FPGA/nRF 先不作为变量引入，观察 PA5 每 500 ms 翻转并持续至少
 2 min，确认 SWD 可重连且 USB 不枚举。回传板卡版本、供电/电流、LED 与 SWD 结果。
 
@@ -446,7 +446,7 @@ nRF 转接板/真实 SPIS 与 SYNC 电气约定、审核后的 XDC 和测试 bit
 - 新 Keil HEX SHA-256：
   `66a791f7fe016e2a5175a70081bebc1319e9318ff0e7c5223973c9d46d175d04`。
 
-下一步执行 `f730_bridge/docs/HARDWARE_BRINGUP.md` Gate A.1：以 3.3 V TTL USB-UART 交叉
+下一步执行 `projects/f730_fmc_bridge/firmware/f730_bridge/docs/HARDWARE_BRINGUP.md` Gate A.1：以 3.3 V TTL USB-UART 交叉
 连接 PA9/PA10 并共地，验证 banner、`ping`/`pong` 和至少 2 min 的每秒 heartbeat。USB 身份仍保持全零且
 门关闭；取得合法 VID/PID/字符串前不得启动 Gate B。
 
@@ -470,7 +470,7 @@ F730↔PC 通讯；板载活动 LED 使用已确认的 PA5。该决定取代 9.4
   USART1 每秒 heartbeat 保留。LED 有效极性仍以待补充的正确板卡资料为准。
 - `UBR1` codec、FMC bridge 和命令解析仍保留；回环模式阻止 bridge 读取/ACK FPGA。
   Gate B 通过后把 echo 宏改为 0，即可继续开发 CDC 二进制桥接 transport。
-- 新增 `f730_bridge/tools/cdc_echo_test.py`，无硬件 self-test 已通过。
+- 新增 `projects/f730_fmc_bridge/firmware/f730_bridge/tools/cdc_echo_test.py`，无硬件 self-test 已通过。
 
 离线构建证据：
 
@@ -482,7 +482,7 @@ F730↔PC 通讯；板载活动 LED 使用已确认的 PA5。该决定取代 9.4
   SHA-256 `7b71cdea4bbd539d24809759dfcea084050d3a0d21849162ed58f8034ef8c29b`，HEX
   SHA-256 `5e083ff0bc0e957503974a41b5a916ae1c18e5b84114692955ec8175ebf65466`。
 
-下一步只执行 `f730_bridge/docs/HARDWARE_BRINGUP.md` 的新 Gate B：烧录上述 Keil HEX，
+下一步只执行 `projects/f730_fmc_bridge/firmware/f730_bridge/docs/HARDWARE_BRINGUP.md` 的新 Gate B：烧录上述 Keil HEX，
 FPGA/nRF 保持断开，确认 Windows 枚举为 `USB\VID_0483&PID_5744` 虚拟 COM，运行 64 B 与
 1024 B 回环、PA5 包活动、20 次拔插/复位和至少 30 min 持续测试。未取得这些开发板证据
 前，不得称 USB 板级通过，也不进入 FMC-to-USB 数据 Gate。
@@ -891,3 +891,4 @@ branch、HEAD、dirty，再开始任务。论文结论必须回指 `paper/eviden
 `codex/zynq7020-v1`、HEAD `65c8c6004655501ced7ae5e7f027196694631b38`、dirty。
 外部 nRF 仅只读确认其分支/基线和当前接口证据，没有写入。CH0 本次论文证据清单保存为
 `paper/evidence/20260903_ch0_crc_commit.md`。
+

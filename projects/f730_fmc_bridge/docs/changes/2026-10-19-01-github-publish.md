@@ -7,7 +7,7 @@
 
 ## 1. 改动前状态
 
-F730 成熟工程已存在于 `f730_bridge/`，WCH 桥接工程位于工作区实验目录，仓库缺少统一模板入口。
+F730 成熟工程已存在于 `projects/f730_fmc_bridge/firmware/f730_bridge/`，WCH 桥接工程位于工作区实验目录，仓库缺少统一模板入口。
 
 ## 2. 改动来源与思路
 
@@ -16,12 +16,12 @@ F730 成熟工程已存在于 `f730_bridge/`，WCH 桥接工程位于工作区�
 ## 3. 具体改进方法
 
 - 新增 `projects/f730_fmc_bridge/` 文档入口。
-- 纳入 `WCH/wch_f730_bridge_20261018/` 的源代码、协议、工具、release 和必要证据。
+- 纳入 `projects/wch_fsmc_bridge/firmware/wch_f730_bridge_20261018/` 的源代码、协议、工具、release 和必要证据。
 - 排除 WCH build、Vivado 缓存和 CH32V307 官方全量示例库。
 
 ## 4. 涉及文件
 
-- `WCH/wch_f730_bridge_20261018/`
+- `projects/wch_fsmc_bridge/firmware/wch_f730_bridge_20261018/`
 - `projects/f730_fmc_bridge/`
 - `AGENTS.md`
 - `docs/00-repository-standard.md`
@@ -42,3 +42,4 @@ F730 成熟工程已存在于 `f730_bridge/`，WCH 桥接工程位于工作区�
 ## 7. 限制与下一步
 
 - WCH 长时间稳定性和复发故障仍需新的证据窗口。
+

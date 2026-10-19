@@ -1,0 +1,18 @@
+name: wch_fsmc_bridge
+title: CH32V307 FSMC to USB bridge
+type: mixed
+status: verified
+owner: Oliver
+created: 2026-10-19
+board: CH32V307EVT / custom WCH bridge board
+device: CH32V307VCT6
+toolchain:
+  - WCH RISC-V Embedded GCC12
+  - CMake + Ninja
+  - WCH-LinkUtility or WCHISPTool
+entry_docs:
+  design: docs/design.md
+  spec: docs/spec.md
+  getting_started: docs/getting-started.md
+  verification: docs/verification.md
+  changes: docs/changes

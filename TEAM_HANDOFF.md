@@ -21,17 +21,17 @@
 - 共享依赖：同一 F730 Git 根下的 `protocol/`、`bridge_contract_v0.md`；协议测试还只读引用嵌套 ZYNQ 的 `protocol_defs.vh`，跨仓发布时必须固定对应 ZYNQ commit。
 
 ## 从仓库开始开发
-1. 克隆 F730 仓；确认 `f730_bridge/`、`protocol/`、顶层合同/交接均存在，且不要把独立 `zynq7020/.git` 混入。
-2. 选择 Keil 或 GNU Arm 工具链，并记录精确版本。Keil 打开 `f730_bridge/MDK-ARM/Hal_template.uvprojx`；CubeMX 仅在明确需要重生成时打开 `Hal_template.ioc`，不得覆盖手工层。
-3. GNU Arm：`cmake --preset Release -S f730_bridge`，若工具不在 PATH，加入 `-DTOOLCHAIN_ROOT=<toolchain-root> -DTOOLCHAIN_PREFIX=arm-none-eabi-`；随后 `cmake --build f730_bridge/build/Release --clean-first`。
-4. 先跑 `python -B -m unittest -v protocol.test_contract` 与 `python -B f730_bridge/tools/cdc_echo_test.py --self-test`。
+1. 克隆 F730 仓；确认 `projects/f730_fmc_bridge/firmware/f730_bridge/`、`protocol/`、顶层合同/交接均存在，且不要把独立 `zynq7020/.git` 混入。
+2. 选择 Keil 或 GNU Arm 工具链，并记录精确版本。Keil 打开 `projects/f730_fmc_bridge/firmware/f730_bridge/MDK-ARM/Hal_template.uvprojx`；CubeMX 仅在明确需要重生成时打开 `Hal_template.ioc`，不得覆盖手工层。
+3. GNU Arm：`cmake --preset Release -S projects/f730_fmc_bridge/firmware/f730_bridge`，若工具不在 PATH，加入 `-DTOOLCHAIN_ROOT=<toolchain-root> -DTOOLCHAIN_PREFIX=arm-none-eabi-`；随后 `cmake --build projects/f730_fmc_bridge/firmware/f730_bridge/build/Release --clean-first`。
+4. 先跑 `python -B -m unittest -v protocol.test_contract` 与 `python -B projects/f730_fmc_bridge/firmware/f730_bridge/tools/cdc_echo_test.py --self-test`。
 5. 所有构建/测试输出写入忽略目录或仓外，不覆盖历史证据。
 
 ## 构建与测试入口
-- Keil：`f730_bridge/MDK-ARM/Hal_template.uvprojx`，Target `Hal_template`。
-- GNU Arm：`f730_bridge/CMakePresets.json`、`f730_bridge/cmake/gcc-arm-none-eabi.cmake`。
+- Keil：`projects/f730_fmc_bridge/firmware/f730_bridge/MDK-ARM/Hal_template.uvprojx`，Target `Hal_template`。
+- GNU Arm：`projects/f730_fmc_bridge/firmware/f730_bridge/CMakePresets.json`、`projects/f730_fmc_bridge/firmware/f730_bridge/cmake/gcc-arm-none-eabi.cmake`。
 - 协议：`protocol/test_contract.py`。
-- CDC：`f730_bridge/tools/cdc_echo_test.py --self-test`；实机步骤见 `f730_bridge/docs/HARDWARE_BRINGUP.md`。
+- CDC：`projects/f730_fmc_bridge/firmware/f730_bridge/tools/cdc_echo_test.py --self-test`；实机步骤见 `projects/f730_fmc_bridge/firmware/f730_bridge/docs/HARDWARE_BRINGUP.md`。
 - 本轮实际结果见 [验证摘要](HANDOFF_VALIDATION.md)；固件 build 不是 PASS。
 
 ## 烧录前条件
@@ -55,3 +55,5 @@
 ## 本次发布说明
 
 本文件基于已冻结的 R005/r1 Opus 交付，由 Astra 核对清单和当前 Git 基线后整理。上述 HEAD 是被验证的源码基线，不是加入交接文档后的提交号。构建与仿真由 Opus 执行；Astra 本次不宣称独立重跑全部构建。仅发布现有开发分支和说明，不新增稳定版或板测通过声明。
+
+

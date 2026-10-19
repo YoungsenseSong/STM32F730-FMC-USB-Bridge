@@ -133,7 +133,7 @@ class ContractTests(unittest.TestCase):
             self.assertEqual(binascii.hexlify(__import__("hashlib").sha256(data).digest()).decode(), metadata["sha256"])
 
     def test_08_f730_and_zynq_constants_match_contract(self) -> None:
-        c_header = (REPO_ROOT / "f730_bridge/Bridge/Inc/bridge_protocol.h").read_text()
+        c_header = (REPO_ROOT / "projects/f730_fmc_bridge/firmware/f730_bridge/Bridge/Inc/bridge_protocol.h").read_text()
         verilog = (
             REPO_ROOT
             / "zynq7020/zynq7020_bridge/rtl/common/protocol_defs.vh"
@@ -189,7 +189,7 @@ class ContractTests(unittest.TestCase):
 
     def test_09_product_safety_gates_remain_explicit(self) -> None:
         identity = (
-            REPO_ROOT / "f730_bridge/USB_DEVICE/App/bridge_usb_identity.h"
+            REPO_ROOT / "projects/f730_fmc_bridge/firmware/f730_bridge/USB_DEVICE/App/bridge_usb_identity.h"
         ).read_text()
         self.assertEqual(
             _numeric_define(identity, "#define", "BRIDGE_USB_IDENTITY_CONFIGURED"),
@@ -204,8 +204,8 @@ class ContractTests(unittest.TestCase):
         self.assertIn("not an allocation to this project", identity)
         self.assertIn("must remain explicitly marked test-only", identity)
 
-        fmc_source = (REPO_ROOT / "f730_bridge/Core/Src/fmc.c").read_text()
-        ioc = (REPO_ROOT / "f730_bridge/Hal_template.ioc").read_text()
+        fmc_source = (REPO_ROOT / "projects/f730_fmc_bridge/firmware/f730_bridge/Core/Src/fmc.c").read_text()
+        ioc = (REPO_ROOT / "projects/f730_fmc_bridge/firmware/f730_bridge/Hal_template.ioc").read_text()
         self.assertIn("FMC_WAIT_SIGNAL_ENABLE", fmc_source)
         self.assertIn("FMC_ASYNCHRONOUS_WAIT_ENABLE", fmc_source)
         self.assertIn("FMC.WaitSignal1=FMC_WAIT_SIGNAL_ENABLE", ioc)
@@ -213,3 +213,4 @@ class ContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+

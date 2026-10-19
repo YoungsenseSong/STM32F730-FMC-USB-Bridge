@@ -15,9 +15,9 @@
 板级资料与论文材料。nRF54L15 工程目前仍位于外部 NCS 工作区；迁移后建议作为独立
 Git 仓库放到本目录的 `nrf54l15-connectkit/`，不要合并三个仓库的历史。
 
-WCH 国产替代桥接工程位于 `WCH/wch_f730_bridge_20261018/`，按
+WCH 国产替代桥接工程位于 `projects/wch_fsmc_bridge/firmware/wch_f730_bridge_20261018/`，按
 `WIRING_WCH_FSMC.md` 使用 CH32V307VCT6 的 FSMC/USB FS CDC 路径。该工程与
-成熟 `f730_bridge/` 并列维护，构建目录和官方 EVT 全量示例不作为发布内容。
+成熟 `projects/f730_fmc_bridge/firmware/f730_bridge/` 并列维护，构建目录和官方 EVT 全量示例不作为发布内容。
 
 ## 系统结构
 
@@ -36,7 +36,7 @@ WCH 国产替代桥接工程位于 `WCH/wch_f730_bridge_20261018/`，按
 2. `bridge_contract_v0.md`：三端唯一共享的字节、CRC、所有权和错误语义；
 3. `docs/WORKSPACE_MIGRATION.md`：Git 边界、迁移方法和不可复制的缓存；
 4. 当前任务所属工程的入口文档：
-   - F730：`f730_bridge/README.md`；
+   - F730：`projects/f730_fmc_bridge/firmware/projects/f730_fmc_bridge/firmware/f730_bridge/README.md`；
    - FPGA：`zynq7020/zynq7020_bridge/docs/FPGA_README.md`；
    - nRF：外部仓库自己的 `handoff.md`；
 5. 论文工作：已迁至同级独立写作目录 `../paper/`，使用根目录
@@ -50,7 +50,7 @@ WCH 国产替代桥接工程位于 `WCH/wch_f730_bridge_20261018/`，按
 
 | 工程 | 当前目录 | Git 边界 | 当前硬件结论 |
 | --- | --- | --- | --- |
-| STM32F730 | `f730_bridge/` | 顶层仓库 | Gate A 已通过；CDC/FMC 完整链路仍需继续上板 |
+| STM32F730 | `projects/f730_fmc_bridge/firmware/f730_bridge/` | 顶层仓库 | Gate A 已通过；CDC/FMC 完整链路仍需继续上板 |
 | ZYNQ7020 | `zynq7020/` | 独立嵌套仓库 | CH0 SPI 主链路已产生有效 record/COMMIT；吞吐与残余恢复错误未验收 |
 | nRF54L15 | 外部 `D:/nRF54L15/NCS-Project/nrf54l15-connectkit/` | 独立仓库 | CRC-16 修正版已与 CH0 实板闭环；由 nRF 对话维护 |
 | 论文 | `paper/` | 顶层仓库 | 只引用可追溯的日志、CSV、bit/hex 哈希和明确验证边界 |
@@ -74,3 +74,5 @@ FPGA 计数仍需重新导出。
 当前可直接打开 `multisensor-research.code-workspace`。迁移到新目录时，只需完整复制
 本目录，并把 nRF 自定义仓库放入 `nrf54l15-connectkit/`，再把工作区文件中的 nRF
 路径改成相对路径。完整步骤见 `docs/WORKSPACE_MIGRATION.md`。
+
+

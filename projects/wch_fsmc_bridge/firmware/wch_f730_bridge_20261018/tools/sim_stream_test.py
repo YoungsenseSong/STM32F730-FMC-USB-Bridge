@@ -15,7 +15,7 @@ import serial
 from serial.tools import list_ports
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 VID_PID = (0x1A86, 0xFE0C)
 LENGTHS = (312, 16432, 32800)
 
@@ -69,13 +69,13 @@ def main() -> int:
                         help="print one validated SIM frame every N frames")
     parser.add_argument("--hex", type=Path, help="selected local HEX; not Flash readback")
     parser.add_argument("--evidence-dir", type=Path,
-                        help="defaults to ignored demo/build/results")
+                        help="defaults to ignored build/results")
     args = parser.parse_args()
     if args.frames < 3 or args.timeout <= 0 or args.show_every < 1:
         parser.error("frames must be at least 3; timeout and show-every must be positive")
     if args.hex and not args.hex.is_file():
         parser.error(f"selected HEX does not exist: {args.hex}")
-    evidence = args.evidence_dir or ROOT / "demo" / "build" / "results"
+    evidence = args.evidence_dir or ROOT / "build" / "results"
     evidence.mkdir(parents=True, exist_ok=True)
     output = evidence / ("sim_stream_" + datetime.now().strftime("%Y%m%d_%H%M%S_%f") + ".json")
     result = {"status": "FAIL", "stage": "start", "timestamp": datetime.now().astimezone().isoformat(),
@@ -149,3 +149,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

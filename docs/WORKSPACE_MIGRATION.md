@@ -24,7 +24,7 @@ MultiSensorResearch/
 ├─ bridge_contract_v0.md
 ├─ multisensor-research.code-workspace
 ├─ protocol/                     三端 golden vectors 与共享测试
-├─ f730_bridge/                  STM32F730 工程
+├─ projects/f730_fmc_bridge/firmware/f730_bridge/                  STM32F730 工程
 ├─ zynq7020/                     ZYNQ 独立 Git 仓库，保留其 .git/
 ├─ nrf54l15-connectkit/          nRF 独立 Git 仓库，保留其 .git/
 └─ paper/                        论文提纲、图表、实验索引和参考文献
@@ -110,3 +110,4 @@ robocopy "D:\nRF54L15\NCS-Project\nrf54l15-connectkit" "F:\OliverS\AI_Embedded\M
 - nRF clean build 使用新源码路径且不复用旧 CMake cache；
 - `protocol/golden/` 的测试继续通过；
 - README、handoff 和 paper 内部相对链接可点击。
+

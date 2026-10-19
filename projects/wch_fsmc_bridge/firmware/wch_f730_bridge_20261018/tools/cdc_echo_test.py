@@ -14,7 +14,7 @@ import serial
 from serial.tools import list_ports
 
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 VID, PID = 0x1A86, 0xFE0C
 
 
@@ -37,19 +37,19 @@ def main() -> int:
     parser.add_argument("--timeout", type=float, default=2.0)
     parser.add_argument("--hex", type=Path, help="selected HEX file for evidence; not Flash readback")
     parser.add_argument("--evidence-dir", type=Path,
-                        help="where to write result JSON; defaults to ignored demo/build/results")
+                        help="where to write result JSON; defaults to ignored build/results")
     args = parser.parse_args()
     if (args.rounds <= 0 or args.packet_bytes <= 0 or args.timeout <= 0
             or args.seconds < 0 or args.progress_seconds <= 0):
         parser.error("rounds, bytes, timeout, and progress-seconds must be positive; seconds must be nonnegative")
 
-    evidence = args.evidence_dir or ROOT / "demo" / "build" / "results"
+    evidence = args.evidence_dir or ROOT / "build" / "results"
     evidence.mkdir(parents=True, exist_ok=True)
     parameters = vars(args).copy()
     parameters["hex"] = str(args.hex) if args.hex else None
     record = {"status": "FAIL", "stage": "start", "parameters": parameters,
               "timestamp": datetime.now().astimezone().isoformat()}
-    firmware = args.hex or ROOT / "demo" / "build" / "release" / "WchBridgeDemo.hex"
+    firmware = args.hex or ROOT / "release" / "WchF730Bridge.hex"
     if firmware.is_file():
         record["selected_hex_path"] = str(firmware.resolve())
         record["selected_hex_sha256"] = hashlib.sha256(firmware.read_bytes()).hexdigest()
@@ -103,3 +103,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
